@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+
+    <title>Gamepad API buttons test page</title>
+
+    <link rel="stylesheet" href="">
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <p id="gamepad-info"></p>
+    <button type="button" id="A" style="width: :20px; height:20px; position: absolute; top: 10px; left: 20000px;"></button>
+    <button type="button" id="B" style="width: :20px; height:20px; position: absolute; top: 0px; left: 23000px;"></button>
+    <button type="button" id="C" style="width: :20px; height:20px; position: absolute; top: 0px; left: 26000px;"></button>
+    <button type="button" id="D" style="width: :20px; height:20px; position: absolute; top: 3px; left: 29000px;"></button>
+    <button type="button" id="E" style="width: :20px; height:20px; position: absolute; top: 40px; left: 19500px;"></button>
+    <button type="button" id="F" style="width: :20px; height:20px; position: absolute; top: 30px; left: 22500px;"></button>
+    <button type="button" id="G" style="width: :20px; height:20px; position: absolute; top: 30px; left: 25500px;"></button>
+    <button type="button" id="H" style="width: :20px; height:20px; position: absolute; top: 33px; left: 28500px;"></button>
+
+    <button type="button" id="Left" style="width: :20px; height:20px; position: absolute; top: 10px; left: 11500px;"></button>
+    <button type="button" id="Down" style="width: :20px; height:20px; position: absolute; top: 10px; left: 14500px;"></button>
+    <button type="button" id="Right" style="width: :20px; height:20px; position: absolute; top: 20px; left: 17500px;"></button>
+    <button type="button" id="Up" style="width: :20px; height:20px; position: absolute; top: 70px; left: 19000px;"></button>
+    
+    <img src="X.png" id = myImg alt="myImg" style="width: :200px; height:200px; position: absolute; top: 210px; left: 870px;">
+    <img src="A.png" id = myImg2 alt="myImg2" style="width: :200px; height:200px; position: absolute; top: 420px; left: 870px;">
+    <img src="Y.png" id = myImg3 alt="myImg3" style="width: :200px; height:200px; position: absolute; top: 100px; left: 1070px;">
+    <img src="RB.png" id = myImg4 alt="myImg4" style="width: :200px; height:200px; position: absolute; top: 100px; left: 1280px;">
+    <img src="LB.png" id = myImg5 alt="myImg5" style="width: :200px; height:200px; position: absolute; top: 150px; left: 1490px;">
+    <img src="B.png" id = myImg6 alt="myImg6" style="width: :200px; height:200px; position: absolute; top: 310px; left: 1070px;">
+    <img src="RT.png" id = myImg7 alt="myImg7" style="width: :200px; height:200px; position: absolute; top: 310px; left: 1280px;">
+    <img src="LT.png" id = myImg8 alt="myImg8" style="width: :200px; height:200px; position: absolute; top: 360px; left: 1490px;">
+    <img src="Left.png" id = myImg9 alt="myImg9" style="width: :200px; height:200px; position: absolute; top: 210px; left: 260px;">
+    <img src="Down.png" id = myImg10 alt="myImg10" style="width: :200px; height:200px; position: absolute; top: 210px; left: 470px;">
+    <img src="Right.png" id = myImg11 alt="myImg11" style="width: :200px; height:200px; position: absolute; top: 310px; left: 670px;">
+    <img src="Up.png" id = myImg12 alt="myImg12" style="width: :222px; height:222px; position: absolute; top: 630px; left: 780px;">
+
+    <img src="Retro_background.png" style = "width: 1911px; height: 922px; top: 200; left: 0; z-index: 2;">
+  </body>
+
+<script>
+
+var gamepadInfo = document.getElementById("gamepad-info");
+var A = document.getElementById("A");
+var B = document.getElementById("B");
+var C = document.getElementById("C");
+var D = document.getElementById("D");
+var E = document.getElementById("E");
+var F = document.getElementById("F");
+var G = document.getElementById("G");
+var H = document.getElementById("H");
+
+var Left = document.getElementById("Left");
+var Down = document.getElementById("Down");
+var Right = document.getElementById("Right");
+var Up = document.getElementById("Up");
+
+var image = document.getElementById("myImg");
+var image2 = document.getElementById("myImg2");
+var image3 = document.getElementById("myImg3");
+var image4 = document.getElementById("myImg4");
+var image5 = document.getElementById("myImg5");
+var image6 = document.getElementById("myImg6");
+var image7 = document.getElementById("myImg7");
+var image8 = document.getElementById("myImg8");
+
+var image9 = document.getElementById("myImg9");
+var image10 = document.getElementById("myImg10");
+var image11 = document.getElementById("myImg11");
+var image12 = document.getElementById("myImg12");
+
+var start;
+
+
+var rAF = window.mozRequestAnimationFrame ||
+  window.webkitRequestAnimationFrame ||
+  window.requestAnimationFrame;
+
+var rAFStop = window.mozCancelRequestAnimationFrame ||
+  window.webkitCancelRequestAnimationFrame ||
+  window.cancelRequestAnimationFrame;
+
+window.addEventListener("gamepadconnected", function() {
+  var gp = navigator.getGamepads()[0];
+  //gamepadInfo.innerHTML = "Gamepad connected at index " + gp.index + ": " + gp.id + ". It has " + gp.buttons.length + " buttons and " + gp.axes.length + " axes.";
+
+  gameLoop();
+});
+
+window.addEventListener("gamepaddisconnected", function() {
+  //gamepadInfo.innerHTML = "Waiting for gamepad.";
+
+  rAFStop(start);
+});
+
+if(!('GamepadEvent' in window)) {
+  // No gamepad events available, poll instead.
+  var interval = setInterval(pollGamepads, 500);
+}
+
+function pollGamepads() {
+  var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+  for (var i = 0; i < gamepads.length; i++) {
+    var gp = gamepads[i];
+    if(gp) {
+      //gamepadInfo.innerHTML = "Gamepad connected at index " + gp.index + ": " + gp.id + ". It has " + gp.buttons.length + " buttons and " + gp.axes.length + " axes.";
+      gameLoop();
+      clearInterval(interval);
+    }
+  }
+}
+
+function buttonPressed(b) {
+  if (typeof(b) == "object") {
+    return b.pressed;
+  }
+  return b == 1.0;
+}
+
+function gameLoop() {
+  var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+  if (!gamepads)
+    return;
+
+  var gp = gamepads[0];
+  if (buttonPressed(gp.buttons[0])) {
+    E.disabled = true;
+    image2.src = "AP.png";
+  }
+  else
+  {E.disabled = false;
+    image2.src = "A.png";}
+  if (buttonPressed(gp.buttons[2])) {
+    A.disabled = true;
+    image.src = "XP.png";
+  }
+  else
+  {A.disabled = false;
+    image.src = "X.png";}
+ if (buttonPressed(gp.buttons[3])) {
+    B.disabled = true;
+    image3.src = "YP.png";
+  }
+  else
+  {B.disabled = false;
+    image3.src = "Y.png";}
+  if (buttonPressed(gp.buttons[4])) {
+    D.disabled = true;
+    image5.src = "LBP.png";
+  }
+  else
+  {D.disabled = false;
+    image5.src = "LB.png";}
+  if (buttonPressed(gp.buttons[5])) {
+    C.disabled = true;
+    image4.src = "RBP.png";
+  }
+  else
+  {C.disabled = false;
+    image4.src = "RB.png";}
+  if (buttonPressed(gp.buttons[1])) {
+    F.disabled = true;
+    image6.src = "BP.png";
+  }
+  else
+  {F.disabled = false;
+    image6.src = "B.png";}
+ if (buttonPressed(gp.buttons[7])) {
+    G.disabled = true;
+    image7.src = "RTP.png";
+  }
+  else
+  {G.disabled = false;
+    image7.src = "RT.png";}
+  if (buttonPressed(gp.buttons[6])) {
+    H.disabled = true;
+    image8.src = "LTP.png";
+  }
+  else
+  {H.disabled = false;
+    image8.src = "LT.png";}
+
+  //Directional Buttons
+
+  if (buttonPressed(gp.buttons[14])) {
+    Left.disabled = true;
+    image9.src = "LeftP.png";
+  }
+  else
+  {Left.disabled = false;
+    image9.src = "Left.png";}
+  if (buttonPressed(gp.buttons[13])) {
+    Down.disabled = true;
+    image10.src = "DownP.png";
+  }
+  else
+  {Down.disabled = false;
+    image10.src = "Down.png";}
+ if (buttonPressed(gp.buttons[15])) {
+    Right.disabled = true;
+    image11.src = "RightP.png";
+  }
+  else
+  {Right.disabled = false;
+    image11.src = "Right.png";}
+  if (buttonPressed(gp.buttons[12])) {
+    Up.disabled = true;
+    image12.src = "UpP.png";
+  }
+  else
+  {Up.disabled = false;
+    image12.src = "Up.png";}
+
+  var start = rAF(gameLoop);
+};
+
+
+</script>
+</html>
